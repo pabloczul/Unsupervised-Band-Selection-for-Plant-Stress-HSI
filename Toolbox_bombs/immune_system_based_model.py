@@ -28,7 +28,6 @@ class AntibodyPopulation(object):
         self.u_min = 1
         self.u_max = None
         self.b = 1  # Degree of non-uniformity, system parameter.
-        self.bands = np.zeros(50)
 
     def initialization(self):
         """
@@ -166,8 +165,7 @@ class AntibodyPopulation(object):
         print("Bands of the best individual in the whole population: {}".format(np.sort(self.D[max_].band_indexes)))
         print("Entropy: {}".format(self.D[max_].entropy_fitness),
               "Distance: {}".format(self.D[max_].distance_fitness))
-        aux = np.sort(self.D[max_].band_indexes)
-        self.bands[:aux.size] = aux
+        return np.sort(self.D[max_].band_indexes)
 
 
     def end_generation(self):
