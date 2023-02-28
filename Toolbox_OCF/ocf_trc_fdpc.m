@@ -6,7 +6,7 @@ function [selected_bands] = ocf_trc_fdpc(X,bands)
 
 % Achieve the ranking values of band via E-FDPC algorithm
 
-X = permute(X,[2,1])
+X = permute(X,[2,1]);
 
 [L, ~] = size(X);
 D = E_FDPC_get_D(X');

@@ -21,7 +21,7 @@ def main(args: Arguments):
         model.serialize_individuals()
         if model.stop_condition(current_generation=iteration):
             break
-        print("Generation: {0}/{1}".format(iteration + 1, args.Gmax))
+        #print("Generation: {0}/{1}".format(iteration + 1, args.Gmax))
         #model.show_bands()
         model.serialize_individuals()
         model.active_population_selection()

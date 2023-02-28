@@ -22,10 +22,14 @@ X = X(:, :);
 
 %% Load CornData Firms
 
+%Load filtered CornData for 2022/06/23 
+CornData = transpose(double(importdata('D:\Python\HSI_Files\Corn20220623Data.mat')));
+
+
 %ligtFirm = double(importdata('C:\Users\marat\Documents\GitHub\svd_sbs\testFirm.mat'));
 
-%Complete databe 447 spectral firms
-CornData = double(importdata('C:\Users\marat\Documents\GitHub\CornAnalisis\CornData.mat'));
+%Complete 2021 databe 447 spectral firms
+% CornData = double(importdata('C:\Users\marat\Documents\GitHub\CornAnalisis\CornData.mat'));
 
 %Mean per nitrogen treatment (4) of Corn database
 %CornData = importdata('C:\Users\marat\Documents\GitHub\CornAnalisis\SectionsCornData.mat');
@@ -55,8 +59,8 @@ end
 %%
 % Number of bands
 
-iterations = 4;
-factor = 8;
+iterations = 8;
+factor = 4;
 
 sections = length(fns);
 
@@ -87,7 +91,8 @@ for j = 1 : sections
 
     for i = 1 : iterations
         % Selection
-        selected_bands = sort(ocf(para_TRC_FDPC, (factor/sections)*i));
+        %selected_bands = sort(ocf(para_TRC_FDPC, (factor/sections)*i));
+        selected_bands = sort(ocf_trc_fdpc(X.(fns{j})', (factor/sections)*i));
         band_FDPC(i,((factor/sections)*i*(j-1)+1):(factor/sections)*i*j) = selected_bands + prior_bands;
         %band_set = ocf(para_TRC_FDPC, k);
 

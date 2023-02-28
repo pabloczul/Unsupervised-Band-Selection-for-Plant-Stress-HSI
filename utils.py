@@ -1,36 +1,37 @@
-def bands_separation(bands, datasetX, datasetY):
-    
-    #Read data
-    data_X = datasetX
-    data_Y = datasetY
-    
-    data_X_selected = data_X[:,:,bands]
+import numpy as np
+import pandas as pd
+import scipy.io as spio
+from sklearn import metrics
 
-    print(data_X_selected.shape)
 
-    #data dimensions
-    x, y, z = data_X_selected.shape
+def loadmat_dicts(filename):
+    '''
+    this function should be called for the problem of not properly recovering python dictionaries
+    from mat files. It calls the function check keys to cure all entries
+    which are still mat-objects
+    '''
+    data = spio.loadmat(filename, struct_as_record=False, squeeze_me=True)
+    return _check_keys(data)
 
-    #reshapes arrays to have all data of each matrix into vectors
-    data_X2d = data_X_selected.reshape((x * y, z))
-    data_Y2d = data_Y.reshape((x * y, 1))
+def _check_keys(dict):
+    '''
+    checks if entries in dictionary are mat-objects. If yes
+    todict is called to change them to nested dictionaries
+    '''
+    for key in dict:
+        if isinstance(dict[key], spio.matlab.mio5_params.mat_struct):
+            dict[key] = _todict(dict[key])
+    return dict        
 
-def extract_pixels(X, y):
-    q = X.reshape(-1, X.shape[2])
-    df = pd.DataFrame(data = q)
-    df = pd.concat([df, pd.DataFrame(data = y.ravel())], axis=1)
-    df.columns= [f'band{i}' for i in range(1, 1+X.shape[2])]+['class']
-    #df.to_csv('Dataset.csv')
-    return df
-
-def confussion(test, predict, class_names):
-    """Creates a dataframe for the confusion matrix between test and predict, using class_names dictionary as tags"""
-    # Deleting zeros of dataset. zeros are non class
-    inter = np.intersect1d(np.where(test.flat!=0)[0], np.where(predict.flat!=0)[0])
-
-    cmatrix = metrics.confusion_matrix(test.reshape(-1)[inter], predict.reshape(-1)[inter])
-    #cmatrix = np.round(cmatrix/cmatrix.max(), 2)
-
-    confusion_dataframe = pd.DataFrame(cmatrix, index=np.array(class_names), columns=np.array(class_names))
-
-    return confusion_dataframe
+def _todict(matobj):
+    '''
+    A recursive function which constructs from matobjects nested dictionaries
+    '''
+    dict = {}
+    for strg in matobj._fieldnames:
+        elem = matobj.__dict__[strg]
+        if isinstance(elem, spio.matlab.mio5_params.mat_struct):
+            dict[strg] = _todict(elem)
+        else:
+            dict[strg] = elem
+    return dict

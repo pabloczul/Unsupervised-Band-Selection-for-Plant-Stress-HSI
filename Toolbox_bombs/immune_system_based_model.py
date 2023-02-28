@@ -162,9 +162,8 @@ class AntibodyPopulation(object):
         Show results concerning given generation.
         """
         max_ = np.argmax([antibody.dominant_fitness for antibody in self.D]).astype(int)
-        print("Bands of the best individual in the whole population: {}".format(np.sort(self.D[max_].band_indexes)))
-        print("Entropy: {}".format(self.D[max_].entropy_fitness),
-              "Distance: {}".format(self.D[max_].distance_fitness))
+        #print("Bands of the best individual in the whole population: {}".format(np.sort(self.D[max_].band_indexes)))
+        #print("Entropy: {}".format(self.D[max_].entropy_fitness), "Distance: {}".format(self.D[max_].distance_fitness))
         return np.sort(self.D[max_].band_indexes)
 
 
